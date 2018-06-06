@@ -1,0 +1,11 @@
+_*
+
+# ... TODO register remote git
+research/longtermtracking
+
+# helmqa git
+*.json
+*.csv
+*.dot
+*.png
+*.pdf

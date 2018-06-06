@@ -1,0 +1,5 @@
+python3-lxml
+python3-pyqt5.qtwebengine
+xvfb
+
++ helm (from source/binary)
