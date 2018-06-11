@@ -1,5 +1,5 @@
 # build »» docker build -t helmqa .
-# run   »» docker run -ti -p 5000:5000 helmqa
+# run   »» docker run -ti -p 5000:5000 -u 12345 helmqa /bin/sh
 
 FROM debian:stretch
 
@@ -20,3 +20,13 @@ COPY . /home/helmqa
 RUN \
 	useradd helmqa && \
 	chown -R helmqa /home/helmqa
+
+RUN \
+	mkdir /home/helmqa/logs && \
+	chmod 777 /home/helmqa/logs && \
+	chmod 777 /home/helmqa
+
+EXPOSE 5000
+
+#CMD ["/bin/sleep", "9999999"]
+CMD ["/bin/sh", "/home/helmqa/helmqaweb.sh"]
