@@ -285,13 +285,17 @@ class AuthorSet:
 		os.system("dot -Tpdf authorsets.dot > authorsets.pdf")
 
 if __name__ == "__main__":
-	if len(sys.argv) != 2:
-		print("Syntax: {} <helmchartdirectory>".format(sys.argv[0]), file=sys.stderr)
+	if len(sys.argv) != 3:
+		print("Syntax: {} <helmchartdirectory> <commmand>".format(sys.argv[0]), file=sys.stderr)
+		print("Commands: stats, statsplot")
 		sys.exit(1)
+	command = sys.argv[2]
 
 	aset = AuthorSet()
-	aset.preprocess(sys.argv[1])
-	aset.process()
-	aset.processproposals()
-	aset.heatmap()
-	aset.dot()
+	if command in ("stats", "statsplot"):
+		aset.preprocess(sys.argv[1])
+		aset.process()
+		aset.processproposals()
+	if command == "statsplot":
+		aset.heatmap()
+		aset.dot()
