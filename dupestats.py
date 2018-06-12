@@ -16,9 +16,10 @@ def dupestats(path_charts):
 	duplicates = {}
 	for chart in charts:
 		dupeslist = helmchartsduplicatefinder.dupefinder(chart, 3)
-		print(chart, dupeslist)
+		basechart = os.path.basename(chart)
+		print(basechart, dupeslist)
 		if dupeslist:
-			duplicates[chart] = dupeslist
+			duplicates[basechart] = dupeslist
 		alldupes += dupeslist
 		stats_values.append(len(dupeslist))
 		stats_dupes.append(sum([x[1] for x in dupeslist]))
