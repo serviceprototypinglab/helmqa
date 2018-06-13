@@ -51,14 +51,14 @@ class HelmQA:
 	def showchart(self, chart):
 		s = ""
 		for cchart in list(self.charts.keys()) + list(self.dupes.keys()):
-			if cchart.startswith(chart + "-"):
+			if cchart.replace("-", "").startswith(chart):
 				if s:
 					s += "<br>"
 				s += self.showchart(cchart)
 		if not chart in self.charts and not chart in self.dupes:
 			if s:
 				return s
-			return "X-No such chart!"
+			return "No such chart!"
 		if s:
 			s += "<br>"
 		s += "HelmQA advice on chart {} / data point {}<br>".format(chart, self.datapoint())
