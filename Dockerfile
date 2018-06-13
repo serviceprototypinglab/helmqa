@@ -5,7 +5,7 @@ FROM debian:stretch
 
 RUN \
 	apt-get update && \
-	apt-get --assume-yes install --no-install-recommends python3-yaml python3-flask python3-pkg-resources wget ca-certificates
+	apt-get --assume-yes install --no-install-recommends python3-yaml python3-flask python3-pkg-resources wget ca-certificates diffstat
 
 # RUN apt-get --assume-yes install --no-install-recommends python3-pyqt5.qtwebengine python3-lxml python3-matplotlib python3-seaborn xvfb
 
