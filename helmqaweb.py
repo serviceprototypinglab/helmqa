@@ -49,9 +49,19 @@ class HelmQA:
 		return header + "<br>" + self.chartlist() + "<br><br>" + self.maintainerlist()
 
 	def showchart(self, chart):
+		s = ""
+		for cchart in list(self.charts.keys()) + list(self.dupes.keys()):
+			if cchart.startswith(chart + "-"):
+				if s:
+					s += "<br>"
+				s += self.showchart(cchart)
 		if not chart in self.charts and not chart in self.dupes:
-			return "No such chart!"
-		s = "HelmQA advice on chart {} / data point {}<br>".format(chart, self.datapoint())
+			if s:
+				return s
+			return "X-No such chart!"
+		if s:
+			s += "<br>"
+		s += "HelmQA advice on chart {} / data point {}<br>".format(chart, self.datapoint())
 		if chart in self.charts:
 			for adv in self.charts[chart]:
 				advbase = adv.split(":")[0]

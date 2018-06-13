@@ -9,3 +9,5 @@ research/longtermtracking
 *.dot
 *.png
 *.pdf
+
+logs
