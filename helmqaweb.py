@@ -51,7 +51,7 @@ class HelmQA:
 	def showchart(self, chart):
 		s = ""
 		for cchart in list(self.charts.keys()) + list(self.dupes.keys()):
-			if cchart.replace("-", "").startswith(chart):
+			if cchart.replace("-", "").startswith(chart) and cchart.replace("-", "") != chart:
 				if s:
 					s += "<br>"
 				s += self.showchart(cchart)
