@@ -11,6 +11,8 @@ README					this file
 INSTALL					rudimentary installation instructions
 TODO					requests for improvements
 
+Dockerfile				container image build script
+
 chartloader.py				downloads list of charts -> _helmlinks.yaml
 buckets.py				downloads all stable charts -> _charts, _templates
 
@@ -24,19 +26,17 @@ authorsets-heatmap.png		#	correlation graph
 authorsets-email.csv		#	hand-crafted data containing issue per email distribution
 authorsets-email-plot.py		plot graph about email issue distribution
 
-changerates			#	manual tracking of change rates
 changerates.py				analyses longtermtracking and extracts change rate data
+					(including 4 sub commands: tracking, extraction of key metrics,
+					accumulation, unique charts identification)
 changerates.csv			#	change rate timeline across all charts
 changerates-charts.txt		#	change rate/activity per chart
 changerates-allscripts.sh		convenience script to post-process changerages.csv
-changerates-metrics.py			extraction of key metrics
 changerates-plot.py			produce changerate figure
 changerates-plot.png		#	figure
-changerates-total.py			accumulation script
 changerates-total.csv		#	accumulated data containing number of charts timeline
 changerates-total-plot.py		produce accumulated changerate figure
 changerates-total-plot.png	#	figure
-evolution.txt			#	manual tracking of changes
 
 dupestats.py				statistics about duplicate values
 dupestats_charts.json		#	structured chart/template data extracted from charts
@@ -54,14 +54,11 @@ variabilitydupestats.csv	#	hand-crafted data containing output from variable/dup
 variabilitydupestats-plot.py		plot graph about variability and duplicate value distribution
 
 helmqaweb.py				serve web reports
+helmqaweb.sh				convenience start script which serves off generated data
 
 longtermtracking-local		#	kickoff scripts for longtermtracking
 
 _*				#	sample and reference data (if present)
 *.log				#	log files (if present)
 
-research/longtermtracking/		#	git repository filled by scripts in longtermtracking-local
-research/osf-preregistration.pdf	#	preregistration screenshot
-research/shot-cos.png			#	another screenshot
-research/shot-osf.png			#	another screenshot
-research/generate-emails.py			inform maintainers about available reports by sending e-mails
+research/longtermtracking/	#	git repository filled by scripts in longtermtracking-local
