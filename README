@@ -32,10 +32,9 @@ changerates.py				analyses longtermtracking and extracts change rate data
 changerates.csv			#	change rate timeline across all charts
 changerates-charts.txt		#	change rate/activity per chart
 changerates-allscripts.sh		convenience script to post-process changerages.csv
-changerates-plot.py			produce changerate figure
+changerates-plot.py			produce changerate rates + accumulated changerate figures
 changerates-plot.png		#	figure
 changerates-total.csv		#	accumulated data containing number of charts timeline
-changerates-total-plot.py		produce accumulated changerate figure
 changerates-total-plot.png	#	figure
 
 dupestats.py				statistics about duplicate values
