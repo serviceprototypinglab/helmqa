@@ -253,7 +253,7 @@ class Changerates:
 				ndate = str(d)
 				if ndate in changes:
 					break
-				changes[ndate] = changes[date]
+				changes[ndate] = 0
 
 	def unique(self, startcount):
 		changes = self.unique_parse(self.unique_getlog())
@@ -264,8 +264,10 @@ class Changerates:
 		filename = "changerates-unique.csv"
 		f = open(filename, "w")
 		f.write("#date,uniquetotal\n")
+		modcount = 0
 		for date in changeslist:
-			f.write("{},{}\n".format(date, changes[date] + startcount))
+			modcount += changes[date]
+			f.write("{},{}\n".format(date, modcount + startcount))
 		f.close()
 
 if __name__ == "__main__":
