@@ -1,14 +1,14 @@
 import yaml
 
-f = open("chartsubs.yaml")
-chartsubs = yaml.load(f)
-f.close()
+with open("chartsubs.yaml") as f:
+    chartsubs = yaml.load(f)
 
 counter = {}
+
 for chartbase in chartsubs:
-	num = len(chartsubs[chartbase])
-	if not num in counter:
-		counter[num] = 0
-	counter[num] += 1
+    num = len(chartsubs[chartbase])
+    if num not in counter:
+        counter[num] = 0
+    counter[num] += 1
 
 print(counter)

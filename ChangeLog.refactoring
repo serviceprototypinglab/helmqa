@@ -1,0 +1,173 @@
+commit 893a64aff9ed3e319171874a9ca52079c0ff94bc
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 7 16:21:09 2018 +0200
+
+    Updated README file
+
+ README | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 0fcee077ce383b004e67833e3fbfbd474942ef86
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 7 16:19:00 2018 +0200
+
+    Updated README file
+
+ README.md => README | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 39a4973dfedff3190fd9cca691457afb49734d22
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 7 16:11:33 2018 +0200
+
+    Updated README file
+
+ README.md | 54 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
+
+commit 9d7f0ceeed3f8ba0d778ffeaa25c22bd2b001962
+Merge: eca8d66 ebd15d8
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 7 15:49:37 2018 +0200
+
+    Merge branch 'master' of https://srv-lab-t-401.zhaw.ch/alam/helmqa
+
+commit eca8d662dd8e573a63e1b60d7084312d0aed43b2
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 7 15:48:04 2018 +0200
+
+    Removed .idea directory
+
+ .idea/helmqa.iml    |  13 -
+ .idea/misc.xml      |   7 -
+ .idea/modules.xml   |   8 -
+ .idea/workspace.xml | 710 ----------------------------------------------------
+ 4 files changed, 738 deletions(-)
+
+commit ebd15d84f9e9224d62f123ad72faa6f5a0177a27
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 27 14:20:03 2018 +0200
+
+    Update README.md
+
+ README.md | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit f673a89c555b4b2510c389cbba377bb00aef4cc7
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 27 14:18:36 2018 +0200
+
+    Refactring completed
+
+ .gitignore                   |  14 +-
+ .idea/misc.xml               |   3 +
+ .idea/workspace.xml          | 667 +++++++++++++++++++++++++++++++++++++------
+ Buckets.py                   | 132 ---------
+ README.md                    |   4 +-
+ applyvariability.py          |  32 +++
+ authorset.py                 | 351 +++++++++++++++++++++++
+ authorsets-email-plot.py     |  19 ++
+ bucket.py                    | 171 +++++++++++
+ changerates-allscripts.sh    |   7 +
+ changerates-plot.py          |  65 +++++
+ changerates.py               | 337 ++++++++++++++++++++++
+ DupeStats.py => dupestats.py | 208 +++++++-------
+ helmqa.sh                    |  10 +
+ helmqaweb.py                 | 206 +++++++++++++
+ learnvariability.py          |  72 +++++
+ lintersummary.sh             |  32 +++
+ main.py                      |  24 +-
+ requirements.txt             |  24 ++
+ rewriter.py                  |  65 +++++
+ test_authorset.py            |   7 +
+ test_bucket.py               |  71 +++++
+ test_dupestats.py            |  13 +
+ variabilitydupestats-plot.py |  42 +++
+ variabilitystats.py          |  14 +
+ 25 files changed, 2256 insertions(+), 334 deletions(-)
+
+commit 2121a9aad423307f1452c3dba7427828b15a8c32
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 11:32:09 2018 +0200
+
+    Renamed test to main
+
+ test.py => main.py | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 3b087e11cd6bda32824cd36d2d46487a32b9b9bd
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 11:30:03 2018 +0200
+
+    Test file edited
+
+ test.py | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+commit e21ee65f6aa9b33bd04fd9c92b00a0e6be760d7d
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 11:28:28 2018 +0200
+
+    Created helper functions
+
+ DupeStats.py | 52 ++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 30 insertions(+), 22 deletions(-)
+
+commit 39c2d36179c21d132f8d6b0e24a3d42f0aeb616a
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 11:02:21 2018 +0200
+
+    Added README file
+
+ Buckets.py   | 2 +-
+ DupeStats.py | 4 +++-
+ README.md    | 4 ++++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+commit 56d17c059c1ae6c011a2bdd0bcdd8caddbc0489c
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 10:55:12 2018 +0200
+
+    Added some more documentation
+
+ Buckets.py | 6 ++++++
+ test.py    | 2 --
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit 1a60c676b2a18ad48eb4e95f9517b9a750b6cf61
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 10:42:39 2018 +0200
+
+    Added some documentation
+
+ .gitignore          |   2 +
+ .idea/workspace.xml |  43 +++++++++++---------
+ DupeStats.py        | 113 ++++++++++++++++++++++++++++++----------------------
+ test.py             |   1 +
+ 4 files changed, 94 insertions(+), 65 deletions(-)
+
+commit ecd4bc2dfcdb44aa6c110b9b516baf5d3ca00b42
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 10:02:29 2018 +0200
+
+    Removed file
+
+ dupestats_charts.json | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 44555c642720160552a3ea1302858c22bb40eb29
+Author: alam <alam@zhaw.ch>
+Date:   Fri Jul 13 10:00:43 2018 +0200
+
+    First commit
+
+ .gitignore            |   5 ++
+ .idea/helmqa.iml      |  13 +++
+ .idea/misc.xml        |   4 +
+ .idea/modules.xml     |   8 ++
+ .idea/workspace.xml   | 220 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ Buckets.py            | 126 +++++++++++++++++++++++++++++
+ DupeStats.py          | 171 +++++++++++++++++++++++++++++++++++++++
+ dupestats_charts.json |   1 +
+ test.py               |  12 +++
+ 9 files changed, 560 insertions(+)

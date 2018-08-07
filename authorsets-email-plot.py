@@ -1,8 +1,8 @@
 import pandas as pd
 import pylab
-import seaborn
 
-FONT=16
+
+FONT = 16
 
 df = pd.read_csv("authorsets-email.csv")
 df = df.set_index(["#numberofemails"])
