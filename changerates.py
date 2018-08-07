@@ -164,7 +164,7 @@ class Changerates:
 
 		df["total"].to_csv("changerates-total.csv")
 
-	def metrics_filtered(df, column, mode=None):
+	def metrics_filtered(self, df, column, mode=None):
 		if mode is None:
 			dfc = df[column]
 		elif mode == "weekday":
@@ -175,7 +175,7 @@ class Changerates:
 			return 0
 		return sum(dfc) / len(dfc)
 
-	def metrics_printstats(df, mode=None):
+	def metrics_printstats(self, df, mode=None):
 		avg_vupdated = self.metrics_filtered(df, "vupdated", mode)
 		avg_updated = self.metrics_filtered(df, "updated", mode)
 		avg_new = self.metrics_filtered(df, "new", mode)
@@ -212,7 +212,7 @@ class Changerates:
 		os.chdir(origdir)
 		return log
 
-	def unique_parse(log):
+	def unique_parse(self, log):
 		date = None
 		comment = None
 		dateline = -5
@@ -245,7 +245,7 @@ class Changerates:
 
 		return changes
 
-	def unique_interpolate(changes, changeslist):
+	def unique_interpolate(self, changes, changeslist):
 		for date in changeslist[:-1]:
 			d = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 			while True:
@@ -291,7 +291,7 @@ if __name__ == "__main__":
 			print("Syntax: {} total <startcount>".format(sys.argv[0]), file=sys.stderr)
 			sys.exit(1)
 		cr = Changerates()
-		cr.producetotal(sys.argv[2])
+		cr.producetotal(int(sys.argv[2]))
 	elif command == "metrics":
 		cr = Changerates()
 		cr.metrics()
@@ -303,6 +303,6 @@ if __name__ == "__main__":
 		if len(sys.argv) == 5:
 			startingpoint = sys.argv[4]
 		cr = Changerates(sys.argv[2], startingpoint)
-		cr.unique(sys.argv[3])
+		cr.unique(int(sys.argv[3]))
 	else:
 		print("Unknown command.", file=sys.stderr)
