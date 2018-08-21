@@ -9,10 +9,11 @@ import glob
 class DupeStats:
     """statistics about duplicate values"""
 
-    blacklist = ("TEMPLATE", "\"TEMPLATE\"", "'TEMPLATE'", "", "v1", "extensions/v1beta1")
+    blacklist = ("TEMPLATE", "\"TEMPLATE\"", "'TEMPLATE'", "", "v1", "extensions/v1beta1", "|")
     path_charts = "_charts"
+    dump_file = "dupestats_charts.json"
     
-    def __init__(self, path=path_charts, verbose=False):
+    def __init__(self, path=path_charts, dump_file=dump_file, verbose=False):
         """
         Keyword arguments:
         path -- path to charts directory (default "_charts")
@@ -30,6 +31,7 @@ class DupeStats:
         self.avg_dupes = None
         self.avg_max = None
         self.allhitlist = []
+        self.dump_file = dump_file
 
         if os.path.isdir(f'{self.path}') and os.listdir(f'{self.path}'):
             charts = glob.glob(f'{self.path}/*.tgz')
@@ -142,9 +144,9 @@ class DupeStats:
         self.duperfinder_helper()
 
         try:
-            os.path.isfile('dupestats_charts.json')
+            os.path.isfile(self.dump_file)
 
-            with open('dupestats_charts.json', 'w') as f:
+            with open(self.dump_file, 'w') as f:
                 json.dump(self.duplicates, f, sort_keys=True)
 
         except OSError as os_err:

@@ -89,9 +89,9 @@ class Bucket:
     def extract(self):
         """Extracts chart templates from packaged charts"""
 
-        if os.path.isdir(self.descriptor):
-            print("render templates (cached)")
-            return
+        # if os.path.isdir(self.descriptor):
+        #     print("render templates (cached)")
+        #     return
 
         print("render templates...")
 

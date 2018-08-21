@@ -3,8 +3,11 @@ import json
 import os
 import time
 import copy
+import subprocess
+from flask import request, jsonify
 
 app = flask.Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 
 class HelmQA:
@@ -175,7 +178,6 @@ class HelmQA:
 
         return r
 
-
 @app.route("/charts/_diffs/<diff>")
 def api_diff(diff):
     return HelmQA().showdiff(diff)
@@ -204,3 +206,76 @@ def api_maintainers():
 @app.route("/")
 def api_frontpage():
     return HelmQA().frontpage()
+
+
+@app.route("/livecheck", methods=['GET'])
+def api_livecheck():
+    domainpath = request.args.get('repo', default=1)
+    repo_name = f"{domainpath.split('/')[-2]}" + "-" + f"{domainpath.split('/')[-1].split('.')[0]}" if "/" in domainpath else domainpath
+    process = git("clone", f"{domainpath}", repo_name)
+    response = "<h1>"
+    response += f"P: {process.decode('UTF-8')}"
+    response += "</h1>"
+
+    if "exists" in process.decode('UTF-8'):
+            with open(f"dupestats_{repo_name}.json") as f:
+                dupes = json.load(f)
+
+            jsonify(dupes)
+
+    elif "fatal" in process.decode('UTF-8'):
+        r = dict()
+        r["message"] = f"{repo_name} doesn't exist"
+        r["code"] = 404
+
+        return jsonify(r)
+
+    run_livecheck(repo_name)
+
+    with open(f"dupestats_{repo_name}.json") as f:
+        dupes = json.load(f)
+
+    return jsonify(dupes)
+
+
+def git(*args):
+    process = subprocess.Popen(["git", args[0], args[1], "--branch", "gh-pages", "--single-branch", args[2]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return process.communicate()[1]
+    #return subprocess.check_call(['git'] + list(args))
+
+
+def run_livecheck(repo_name):
+    from bucket import Bucket
+    from dupestats import DupeStats
+    from authorset import AuthorSet
+    from rewriter import rewritechart
+
+    bucket = Bucket(path=repo_name, desc=f"{repo_name}-descriptors")
+    bucket.extract()
+
+    stat = DupeStats(path=repo_name, dump_file=f"dupestats_{repo_name}.json")
+    stat.dupe_stats()
+
+    authorSet = AuthorSet(chartdir=repo_name,
+                          authorset_charts=f"authorsets_{repo_name}_charts.json",
+                          authorset_maint=f"authorsets_{repo_name}_maint.json",
+                          authorset_emails=f"authorsets_{repo_name}_emails.json",
+                          authorset_heatmap=f"authorsets_{repo_name}-heatmap.png",
+                          authorset_dot=f"authorsets_{repo_name}.dot",
+                          authorset_png=f"autorsets_{repo_name}.png",
+                          authorset_pdf=f"authorsets_{repo_name}.pdf",
+                          dupestats_charts=f"dupestats_{repo_name}.json")
+
+    authorSet.preprocess()
+    authorSet.process()
+    authorSet.processproposals()
+    authorSet.heatmap()
+    authorSet.dot()
+
+
+    #
+    # charts = sorted(stat.get_charts())
+    #
+    # for chart in charts:
+    #     dupeslist = stat.dupefinder(chart)
+    #     rewritechart(chart, dupeslist)

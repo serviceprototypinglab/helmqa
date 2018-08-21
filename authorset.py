@@ -8,8 +8,24 @@ import json
 class AuthorSet:
 
     chartdir = "_charts"
+    authorset_charts = "authorsets_charts.json"
+    authorset_maint = "authorsets_maint.json"
+    authorset_emails = "authorsets_emails.json"
+    authorset_heatmap = "authorsets-heatmap.png"
+    authorset_dot = "authorsets.dot"
+    authorset_png = "authorsets.png"
+    authorset_pdf = "authorsets.pdf"
+    dupestats_charts = "dupestats_charts.json"
 
-    def __init__(self, chartdir: str = chartdir):
+    def __init__(self, chartdir: str = chartdir,
+                 authorset_charts: str = authorset_charts,
+                 authorset_maint: str = authorset_maint,
+                 authorset_emails: str = authorset_emails,
+                 authorset_heatmap: str = authorset_heatmap,
+                 authorset_dot: str = authorset_dot,
+                 authorset_png: str = authorset_png,
+                 authorset_pdf: str = authorset_pdf,
+                 dupestats_charts: str = dupestats_charts):
 
         self.chartdir = chartdir
         self.sets = {}
@@ -20,6 +36,14 @@ class AuthorSet:
         self.chartfiles = []
         self.maxrefs = 0
         self.maxmaint = 0
+        self.authorset_charts = authorset_charts
+        self.authorset_maint = authorset_maint
+        self.dupestats_charts = dupestats_charts
+        self.authorset_email = authorset_emails
+        self.authorset_heatmap = authorset_heatmap
+        self.authorset_dot = authorset_dot
+        self.authorset_png = authorset_png
+        self.authorset_pdf = authorset_pdf
 
     def preprocess(self):
         if os.path.isdir(self.chartdir):
@@ -93,10 +117,10 @@ class AuthorSet:
                     chart_list = ",".join(self.chartnames[chartname])
                     chartdest[chart].append(f"multiple:{chart_list}")
 
-        with open("authorsets_charts.json", "w") as f:
+        with open(self.authorset_charts, "w") as f:
             json.dump(chartdest, f, sort_keys=True)
 
-        with open("authorsets_maint.json", "w") as f:
+        with open(self.authorset_maint, "w") as f:
             json.dump(maintdest, f, sort_keys=True)
 
         outmails = {}
@@ -117,10 +141,10 @@ class AuthorSet:
             if s:
                 outmails[email] = s
 
-        if not os.path.isfile("dupestats_charts.json"):
+        if not os.path.isfile(self.dupestats_charts):
             print("WARNING: incomplete chart-maintainer e-mail address links, no dupestats found")
         else:
-            with open("dupestats_charts.json") as f:
+            with open(self.dupestats_charts) as f:
                 ds = json.load(f)
 
             for email in self.emails:
@@ -164,7 +188,7 @@ class AuthorSet:
 
             print(" distribution", counter)
 
-        with open("authorsets_emails.json", "w") as f:
+        with open(self.authorset_emails, "w") as f:
             json.dump(outmails, f, sort_keys=True)
 
     def heatmap(self):
@@ -194,13 +218,13 @@ class AuthorSet:
         ax = sns.heatmap(a, annot=True, cmap="gray_r")
         ax.set_xlabel("charts")
         ax.set_ylabel("maintainers")
-        plt.savefig("authorsets-heatmap.png")
+        plt.savefig(self.authorset_heatmap)
 
     def dot(self):
         if not len(self.references):
             return
 
-        with open("authorsets.dot", "w") as f:
+        with open(self.authorset_dot, "w") as f:
             print("digraph authorsets {", file=f)
 
             for identity in sorted(self.references):
@@ -209,8 +233,8 @@ class AuthorSet:
 
             print("}", file=f)
 
-        os.system("dot -Tpng authorsets.dot > authorsets.png")
-        os.system("dot -Tpdf authorsets.dot > authorsets.pdf")
+        os.system(f"dot -Tpng {self.authorset_dot} > {self.authorset_png}")
+        os.system(f"dot -Tpdf {self.authorset_dot} > {self.authorset_pdf}")
 
     def authorset(self, chartfile):
         tgz = False

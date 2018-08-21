@@ -1,3 +1,44 @@
+commit 1ea87cd176e30911471f71749928241820fa8fba
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 21 15:55:46 2018 +0200
+
+    Improved the livecheck functionality
+
+ .gitignore   |  1 +
+ helmqa.sh    | 10 --------
+ helmqaweb.py | 76 +++++++++++++++++++++++++++++++++++++++---------------------
+ 3 files changed, 50 insertions(+), 37 deletions(-)
+
+commit 938941729511b0c1a4794ab6df68eba4120ff18f
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 21 15:53:07 2018 +0200
+
+    Made modules more dynamic
+
+ authorset.py | 46 +++++++++++++++++++++++++++++++++++-----------
+ dupestats.py | 10 ++++++----
+ 2 files changed, 41 insertions(+), 15 deletions(-)
+
+commit 299fb01d507f49cc3a4f0719f0ed917ff9818d3c
+Author: alam <alam@zhaw.ch>
+Date:   Mon Aug 20 11:36:04 2018 +0200
+
+    Added livecheck functionality
+
+ bucket.py    |  6 +++---
+ helmqa.sh    |  2 +-
+ helmqaweb.py | 36 +++++++++++++++++++++++++++++++++++-
+ 3 files changed, 39 insertions(+), 5 deletions(-)
+
+commit f1561dbfe1717106b4b99e5bd66776306a2b6b09
+Author: alam <alam@zhaw.ch>
+Date:   Tue Aug 14 15:36:51 2018 +0200
+
+    added livecheck method
+
+ helmqaweb.py | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
 commit 893a64aff9ed3e319171874a9ca52079c0ff94bc
 Author: alam <alam@zhaw.ch>
 Date:   Tue Aug 7 16:21:09 2018 +0200
