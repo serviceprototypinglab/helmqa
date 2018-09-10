@@ -17,13 +17,14 @@ def rewritechart(chartfile, dupeslist):
     tar.extractall("_rewriter/orig")
     tar.extractall("_rewriter/deduped")
 
-    for varcounter, (v, count) in enumerate(dupeslist):
-        v = v.replace("\\", "\\\\")
-        v = v.replace("/", "\\/").replace("'", "'\\''").replace("[", "\\[")
-        v = v.replace("TEMPLATE", "")
+    for (varcounter, dictionary) in enumerate(dupeslist):
+        dictionary['value'] = dictionary['value'].replace("\\", "\\\\")
+        dictionary['value'] = dictionary['value'].replace("/", "\\/").replace("'", "'\\''").replace("[", "\\[")
+        dictionary['value'] = dictionary['value'].replace("TEMPLATE", "")
 
-        cmd = "for i in `find _rewriter/deduped/*/templates/ -name *.yaml`;" \
-              f" do sed -i -e 's/: \(.*\){v}$/: \\1{{{{ .suggestions.var{varcounter} }}}}/' $i; done"
+        value = dictionary['value']
+
+        cmd = f"for i in `find _rewriter/deduped/*/templates -name *.yaml`; do sed -i -e 's/: \(.*\){value}$/: \\1{{{{ .suggestions.var{varcounter} }}}}/' $i; done"
 
         os.system(cmd)
 
@@ -45,7 +46,8 @@ def rewritechart(chartfile, dupeslist):
         extraeffect = 0
     else:
         lines = int(lines)
-        extraeffect = lines - sum([x[1] for x in dupeslist])
+        summary = sum([x['duplicates'] for x in dupeslist])
+        extraeffect = lines - summary
 
     print("effect", lines, "= +", extraeffect)
 
@@ -55,8 +57,8 @@ def rewritechart(chartfile, dupeslist):
         print("", file=f)
         print("suggestions:", file=f)
 
-        for varcounter, (v, count) in enumerate(dupeslist):
-            print(f"  var{varcounter}: {v}", file=f)
+        for (varcounter, dictionary) in enumerate(dupeslist):
+            print(f"  var{varcounter}: {dictionary['value']}", file=f)
 
     p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
     diff = p.stdout

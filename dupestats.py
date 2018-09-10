@@ -26,7 +26,7 @@ class DupeStats:
         self.stats_max = []
         self.alldupes = []
         self.counter = {}
-        self.duplicates = {}
+        self.duplicates = []
         self.avg_values = None
         self.avg_dupes = None
         self.avg_max = None
@@ -49,16 +49,20 @@ class DupeStats:
 
             print(basechart, dupeslist)
 
+            dupeDict = dict()
+            dupeDict[f"{basechart}"] = dupeslist
+
             if dupeslist:
-                self.duplicates[basechart] = dupeslist
+                self.duplicates.append(dupeDict)
+                # self.duplicates[basechart] = dupeslist
 
             self.alldupes += dupeslist
 
             self.stats_values.append(len(dupeslist))
-            self.stats_dupes.append(sum([x[1] for x in dupeslist]))
+            self.stats_dupes.append(sum([x["duplicates"] for x in dupeslist]))
 
             if len(dupeslist) > 0:
-                self.stats_max.append(max([x[1] for x in dupeslist]))
+                self.stats_max.append(max([x["duplicates"] for x in dupeslist]))
 
                 num = len(dupeslist)
 
@@ -116,7 +120,18 @@ class DupeStats:
         hitlist = sorted(values.items(), key=operator.itemgetter(1, 0), reverse=True)
         significantlist = [x for x in hitlist if x[1] >= threshold and x[0] not in self.blacklist]
 
-        return significantlist
+        list_of_dicts = list()
+        dictionary = dict()
+
+        import copy
+
+        for dup, value in significantlist:
+            dictionary["value"], dictionary["duplicates"] = dup, value
+            list_of_dicts.append(copy.deepcopy(dictionary))
+            dictionary.clear()
+
+        return list_of_dicts
+        #return significantlist
 
     @staticmethod
     def dupefinder_template(template):
@@ -194,14 +209,18 @@ class DupeStats:
         if self.avg_max:
             print("Average maximum", self.avg_max)
 
-        self.allhitlist = sorted(self.alldupes, key=lambda tup: tup[1], reverse=True)
+        self.allhitlist = sorted(self.alldupes, key=lambda tup: tup["duplicates"], reverse=True)
 
         print("----------------------------")
         print("Top global duplicate values:")
         print("----------------------------")
 
-        for v, count in self.allhitlist[:10]:
-            print(f'{count:2d} x {v}')
+        for item in self.allhitlist[:10]:
+            val, dups = item.values()
+            print(f'{dups:2d} x {val}')
+
+        # for v, count in self.allhitlist[:10]:
+        #     print(f'{count:2d} x {v}')
 
         print("------------------------------")
         print("Duplicate values distribution:")

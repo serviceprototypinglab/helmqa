@@ -1,13 +1,13 @@
+venv/*
 _*
-
-# ... TODO register remote git
-research/longtermtracking
-
-# helmqa git
+__pycache__/*
+.idea/*
+.vscode/
 *.json
-*.csv
+*.pdf
 *.dot
 *.png
-*.pdf
-
+*.csv
+IRREGULAR
 logs
+.test_charts

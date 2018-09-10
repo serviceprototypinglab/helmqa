@@ -32,7 +32,13 @@ class HelmQA:
 
     def chartlist(self):
         chartmix = copy.copy(self.charts)
-        chartmix.update(self.dupes)
+
+        l_d = list()
+
+        for ch in self.dupes:
+            l_d.append(*ch.items())
+
+        chartmix.update(l_d)
 
         s = "Follow the links to per-chart quality reports."
         s += "<br><br>"
@@ -54,14 +60,19 @@ class HelmQA:
     def showchart(self, chart):
         s = ""
 
-        for cchart in list(self.charts.keys()) + list(self.dupes.keys()):
+        list_dupes = list()
+
+        for ch in self.dupes:
+            list_dupes.append(*ch.keys())
+
+        for cchart in list(self.charts.keys()) + list_dupes:
             if cchart.replace("-", "").startswith(chart) and cchart.replace("-", "") != chart:
                 if s:
                     s += "<br>"
 
                 s += self.showchart(cchart)
 
-        if chart not in self.charts and chart not in self.dupes:
+        if chart not in self.charts and chart not in list_dupes:
             if s:
                 return s
             return "No such chart!"
@@ -98,7 +109,7 @@ class HelmQA:
 
                 s += self.showbox(adv, expl, rat, act)
 
-        if chart in self.dupes:
+        if chart in list_dupes:
             adv = "duplicatevalues"
             expl = "The templates contain values with at least two duplicates which are candidates for template " \
                    "variable assignment. "
@@ -108,7 +119,7 @@ class HelmQA:
                   "removed in favour of variable assignments. Modify the chart templates accordingly. "
             act += "<br>The following occurrences of duplicate values have been found. Each entry consists of the " \
                    "value and the number of occurrences.<br> "
-            act += str(self.dupes[chart])
+            act += str(self.dupes[list_dupes.index(chart)][chart])
 
             chartname = chart.replace(".tgz", "")
             diff = f"_diffs/{chartname}-deduplicated.diff"
@@ -178,6 +189,7 @@ class HelmQA:
 
         return r
 
+
 @app.route("/charts/_diffs/<diff>")
 def api_diff(diff):
     return HelmQA().showdiff(diff)
@@ -211,37 +223,87 @@ def api_frontpage():
 @app.route("/livecheck", methods=['GET'])
 def api_livecheck():
     domainpath = request.args.get('repo', default=1)
-    repo_name = f"{domainpath.split('/')[-2]}" + "-" + f"{domainpath.split('/')[-1].split('.')[0]}" if "/" in domainpath else domainpath
-    process = git("clone", f"{domainpath}", repo_name)
-    response = "<h1>"
-    response += f"P: {process.decode('UTF-8')}"
-    response += "</h1>"
 
-    if "exists" in process.decode('UTF-8'):
+    repo_name = f"{domainpath.split('/')[-2]}" + "-" + f"{domainpath.split('/')[-1].split('.')[0]}" if "/" and ("https://github.com/" or ".git") in domainpath else domainpath
+
+    try:
+        while repo_name[0] == "-":
+            repo_name = repo_name[1:]
+    except IndexError:
+        repo_name = domainpath
+
+    process = clone(f"{domainpath}", repo_name)
+
+    response = dict()
+
+    if "exists" in process:#.decode('UTF-8'):
+        if "Already" in pull(repo_name):
+
             with open(f"dupestats_{repo_name}.json") as f:
                 dupes = json.load(f)
 
-            jsonify(dupes)
+            with open(f"authorsets_{repo_name}_charts.json") as f:
+                mults = json.load(f)
 
-    elif "fatal" in process.decode('UTF-8'):
-        r = dict()
-        r["message"] = f"{repo_name} doesn't exist"
-        r["code"] = 404
+                list_mults = list()
+                list_mults.append(mults) if mults else 1
 
-        return jsonify(r)
+            if not list_mults and not dupes:
+                response["status"] = "success"
+                response["code"] = 200
+            else:
+                response["status"] = "fail"
+                response["code"] = 404
+
+            response["duplicates"] = dupes
+            response["multiplicates"] = list_mults
+
+            return jsonify(response)
+
+    elif "fatal" in process:#.decode('UTF-8'):
+        response["message"] = f"{domainpath} doesn't exist"
+        response["code"] = 404
+
+        return jsonify(response)
 
     run_livecheck(repo_name)
 
     with open(f"dupestats_{repo_name}.json") as f:
         dupes = json.load(f)
 
-    return jsonify(dupes)
+    with open(f"authorsets_{repo_name}_charts.json") as f:
+        mults = json.load(f)
+        list_mults = list()
+        list_mults.append(mults) if mults else 1
+
+    if not list_mults and not dupes:
+        response["status"] = "success"
+        response["code"] = 200
+    else:
+        response["status"] = "fail"
+        response["code"] = 404
+
+    response["duplicates"] = dupes
+    response["multiplicates"] = list_mults
+    return jsonify(response)
 
 
-def git(*args):
-    process = subprocess.Popen(["git", args[0], args[1], "--branch", "gh-pages", "--single-branch", args[2]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return process.communicate()[1]
-    #return subprocess.check_call(['git'] + list(args))
+def pull(repo_name):
+    process = subprocess.Popen(['git', f'--git-dir={repo_name}/.git', 'pull'], stdout=subprocess.PIPE).communicate()[0].decode('UTF-8')
+    return process
+
+
+def clone(domain_path, repo_name):
+    process = subprocess.Popen(['git', 'clone', domain_path, repo_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[1].decode('UTF-8')
+    return process
+
+
+def package_charts_from_repo(repo_name):
+    process = os.listdir(repo_name)
+
+    for directory in process:
+        if os.path.isdir(f'{repo_name}/{directory}'):
+            subprocess.call(['helm', 'package', f'{repo_name}/{directory}', '-d', f'{repo_name}/'])
 
 
 def run_livecheck(repo_name):
@@ -259,7 +321,7 @@ def run_livecheck(repo_name):
     authorSet = AuthorSet(chartdir=repo_name,
                           authorset_charts=f"authorsets_{repo_name}_charts.json",
                           authorset_maint=f"authorsets_{repo_name}_maint.json",
-                          authorset_emails=f"authorsets_{repo_name}_emails.json",
+                          authorset_email=f"authorsets_{repo_name}_emails.json",
                           authorset_heatmap=f"authorsets_{repo_name}-heatmap.png",
                           authorset_dot=f"authorsets_{repo_name}.dot",
                           authorset_png=f"autorsets_{repo_name}.png",
@@ -269,8 +331,8 @@ def run_livecheck(repo_name):
     authorSet.preprocess()
     authorSet.process()
     authorSet.processproposals()
-    authorSet.heatmap()
-    authorSet.dot()
+    # authorSet.heatmap()
+    # authorSet.dot()
 
 
     #

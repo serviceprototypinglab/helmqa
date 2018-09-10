@@ -20,7 +20,7 @@ class AuthorSet:
     def __init__(self, chartdir: str = chartdir,
                  authorset_charts: str = authorset_charts,
                  authorset_maint: str = authorset_maint,
-                 authorset_emails: str = authorset_emails,
+                 authorset_email: str = authorset_emails,
                  authorset_heatmap: str = authorset_heatmap,
                  authorset_dot: str = authorset_dot,
                  authorset_png: str = authorset_png,
@@ -39,7 +39,7 @@ class AuthorSet:
         self.authorset_charts = authorset_charts
         self.authorset_maint = authorset_maint
         self.dupestats_charts = dupestats_charts
-        self.authorset_email = authorset_emails
+        self.authorset_email = authorset_email
         self.authorset_heatmap = authorset_heatmap
         self.authorset_dot = authorset_dot
         self.authorset_png = authorset_png
@@ -157,8 +157,9 @@ class AuthorSet:
                     for reference in sorted(self.references[identity]):
                         if reference in self.chartnames:
                             for chartname in self.chartnames[reference]:
-                                if chartname in ds:
-                                    s.append({"chart": reference})
+                                if ds:
+                                    if chartname in ds[0].keys():
+                                        s.append({"chart": reference})
                 if s:
                     if email not in outmails:
                         outmails[email] = []
@@ -188,7 +189,7 @@ class AuthorSet:
 
             print(" distribution", counter)
 
-        with open(self.authorset_emails, "w") as f:
+        with open(self.authorset_email, "w") as f:
             json.dump(outmails, f, sort_keys=True)
 
     def heatmap(self):

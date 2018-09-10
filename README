@@ -52,4 +52,13 @@ helmqaweb.py                            serve web reports
 helmqaweb.sh                            convenience start script which serves off generated data
 
 _*                              #       sample and reference data (if present)
-.log                           #       log files (if present)
+.log                            #       log files (if present)
+--------------------------------------------------------------------------------------------------------------------
+API Reference:
+/livecheck?repo=github/repo/url         (Under active development)
+                                        So far, the API ONLY accepts repos with the branch "gh-pages", in which the
+                                        packaged helm charts are stored. HelmQA will clone the repository and process
+                                        the charts. Then it will return a JSON object containing, for example,
+                                        duplicated values that can be consolidated in the "values.yaml" file.
+
+

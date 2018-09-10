@@ -1,13 +1,11 @@
 # build »» docker build -t helmqa .
 # run   »» docker run -ti -p 5000:5000 -u 12345 helmqa /bin/sh
 
-FROM debian:stretch
+FROM python:stretch
 
 RUN \
 	apt-get update && \
-	apt-get --assume-yes install --no-install-recommends python3-yaml python3-flask python3-pkg-resources wget ca-certificates diffstat
-
-# RUN apt-get --assume-yes install --no-install-recommends python3-pyqt5.qtwebengine python3-lxml python3-matplotlib python3-seaborn xvfb
+	apt-get --assume-yes install --no-install-recommends wget ca-certificates diffstat
 
 RUN \
 	wget --no-check-certificate https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
@@ -26,7 +24,12 @@ RUN \
 	chmod 777 /home/helmqa/logs && \
 	chmod 777 /home/helmqa
 
+RUN \
+     cd /home/helmqa && \
+     pip3 install -r requirements.txt
+
 EXPOSE 5000
 
 #CMD ["/bin/sleep", "9999999"]
-CMD ["/bin/sh", "/home/helmqa/helmqaweb.sh"]
+WORKDIR /home/helmqa
+CMD ["/bin/sh", "/home/helmqa/helmqa.sh"]
