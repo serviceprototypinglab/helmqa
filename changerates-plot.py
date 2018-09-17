@@ -1,10 +1,10 @@
 import pandas as pd
 import pylab
-import seaborn
 import os
 import sys
 
 FONT = 16
+
 
 def plot_rates(cmap):
 	df = pd.read_csv("changerates.csv")
@@ -17,17 +17,14 @@ def plot_rates(cmap):
 	ax.legend(fontsize=FONT)
 
 	pylab.setp(ax.xaxis.get_majorticklabels(), rotation=70)
-	#ax.set_xticks(range(0, len(df["counter"]), 2))
 	pylab.tight_layout()
 
-	#pylab.show()
 	pylab.savefig("changerates-plot.png")
+
 
 def plot_total(cmap):
 	df = pd.read_csv("changerates-total.csv", header=None, names=["#date", "total"])
 	df = df.set_index(["#date"])
-
-	#df["total"] = df["total"].astype(int)
 
 	dfuniq = None
 	if os.path.isfile("changerates-unique.csv"):
@@ -44,15 +41,14 @@ def plot_total(cmap):
 		dfuniq.plot(cmap=cmap + "_r", ax=ax, fontsize=FONT)
 
 	pylab.setp(ax.xaxis.get_majorticklabels(), rotation=70)
-	#ax.set_xticks(range(0, len(df["counter"]), 2))
 	pylab.tight_layout()
 
-	#pylab.show()
 	pylab.savefig("changerates-total-plot.png")
+
 
 if __name__ == "__main__":
 	if len(sys.argv) not in (2, 3):
-		print("Syntax: {} <command> [<colourmap>]".format(sys.argv[0]), file=sys.stderr)
+		print(f"Syntax: {sys.argv[0]} <command> [<colourmap>]", file=sys.stderr)
 		print("Commands: rates, total / Colourmaps: e.g. gray, seismic", file=sys.stderr)
 		sys.exit(1)
 

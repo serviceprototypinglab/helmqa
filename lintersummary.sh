@@ -6,7 +6,8 @@ alltxt=
 
 for i in _charts/*.tgz
 do
-	echo -n .
+	echo -n $counter
+
 	lintput=`helm lint $i`
 
 	infotxt=`echo $lintput | grep INFO`
@@ -17,11 +18,11 @@ do
 	allwarning=$(($allwarning+$warning))
 	if [ $info -gt 0 ]
 	then
-		chartsinfo=$(($chartsinfo+1))
+		((chartsinfo++))
 		infotxt="$infotxt\n"
 	fi
 	alltxt="$alltxt$infotxt"
-	numcharts=$(($numcharts+1))
+	((numcharts++))
 done
 echo
 

@@ -1,68 +1,67 @@
 import tarfile
-#import re
-#import operator
-import sys
 import os
 import subprocess
 
-import helmchartsduplicatefinder
 
 def rewritechart(chartfile, dupeslist):
-	os.system("rm -rf _rewriter")
-	os.makedirs("_rewriter/orig", exist_ok=True)
-	os.makedirs("_rewriter/deduped", exist_ok=True)
-	tar = tarfile.open(chartfile)
-	tar.extractall("_rewriter/orig")
-	tar.extractall("_rewriter/deduped")
+    try:
+        subprocess.call(["rm", "-rf", "_rewriter"])
+        subprocess.call(["mkdir", "-p", "_rewriter/orig"])
+        subprocess.call(["mkdir", "-p", "_rewriter/deduped"])
+        subprocess.call(["mkdir", "-p", "_diffs"])
+    except OSError as os_err:
+        print(os_err)
+        exit(1)
 
-	for varcounter, (v, count) in enumerate(dupeslist):
-		v = v.replace("\\", "\\\\")
-		v = v.replace("/", "\\/").replace("'", "'\\''").replace("[", "\\[")
-		v = v.replace("TEMPLATE", "")
-		cmd = "for i in `find _rewriter/deduped/*/templates/ -name *.yaml`; do sed -i -e 's/: \(.*\){}$/: \\1{{{{ .suggestions.var{} }}}}/' $i; done".format(v, varcounter)
-		#print("---> execute", cmd)
-		os.system(cmd)
+    tar = tarfile.open(chartfile)
+    tar.extractall("_rewriter/orig")
+    tar.extractall("_rewriter/deduped")
 
-	p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
-	diff = p.stdout
-	os.makedirs("_diffs", exist_ok=True)
-	difffile = os.path.join("_diffs", os.path.basename(chartfile).replace(".tgz", "-deduplicated.diff"))
-	f = open(difffile, "wb")
-	f.write(diff)
-	f.close()
+    for (varcounter, dictionary) in enumerate(dupeslist):
+        dictionary['value'] = dictionary['value'].replace("\\", "\\\\")
+        dictionary['value'] = dictionary['value'].replace("/", "\\/").replace("'", "'\\''").replace("[", "\\[")
+        dictionary['value'] = dictionary['value'].replace("TEMPLATE", "")
 
-	p = subprocess.run("diffstat {} | tail -1 | sed 's/insertions.*//'".format(difffile), shell=True, stdout=subprocess.PIPE)
-	lines = p.stdout.decode("utf-8").strip().split(" ")[-1]
-	if lines == "changed":
-		lines = 0
-		extraeffect = 0
-	else:
-		lines = int(lines)
-		extraeffect = lines - sum([x[1] for x in dupeslist])
-	print("effect", lines, "= +", extraeffect)
+        value = dictionary['value']
 
-	dirname = os.listdir("_rewriter/deduped")[0]
-	f = open("_rewriter/deduped/{}/values.yaml".format(dirname), "a")
-	print("", file=f)
-	print("suggestions:", file=f)
-	for varcounter, (v, count) in enumerate(dupeslist):
-		print("  var{}: {}".format(varcounter, v), file=f)
-	f.close()
+        cmd = f"for i in `find _rewriter/deduped/*/templates -name *.yaml`; do sed -i -e 's/: \(.*\){value}$/: \\1{{{{ .suggestions.var{varcounter} }}}}/' $i; done"
 
-	p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
-	diff = p.stdout
-	f = open(difffile, "wb")
-	f.write(diff)
-	f.close()
+        os.system(cmd)
 
-if __name__ == "__main__":
-	if len(sys.argv) != 2:
-		print("Syntax: {} <helmchartfile>".format(sys.argv[0]), file=sys.stderr)
-		sys.exit(1)
+    p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
+    diff = p.stdout
 
-	dupeslist = helmchartsduplicatefinder.dupefinder(sys.argv[1], 3, verbose=False)
+    difffile = os.path.join("_diffs", os.path.basename(chartfile).replace(".tgz", "-deduplicated.diff"))
 
-	for v, count in dupeslist:
-		print("{:2d} x {}".format(count, v))
+    with open(difffile, "wb") as f:
+        f.write(diff)
 
-	rewritechart(sys.argv[1], dupeslist)
+    p = subprocess.run(f"diffstat {difffile} | tail -1 | sed 's/insertions.*//'", shell=True,
+                       stdout=subprocess.PIPE)
+
+    lines = p.stdout.decode("utf-8").strip().split(" ")[-1]
+
+    if lines == "changed":
+        lines = 0
+        extraeffect = 0
+    else:
+        lines = int(lines)
+        summary = sum([x['duplicates'] for x in dupeslist])
+        extraeffect = lines - summary
+
+    print("effect", lines, "= +", extraeffect)
+
+    dirname = os.listdir("_rewriter/deduped")[0]
+
+    with open(f"_rewriter/deduped/{dirname}/values.yaml", "a") as f:
+        print("", file=f)
+        print("suggestions:", file=f)
+
+        for (varcounter, dictionary) in enumerate(dupeslist):
+            print(f"  var{varcounter}: {dictionary['value']}", file=f)
+
+    p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
+    diff = p.stdout
+
+    with open(difffile, "wb") as f:
+        f.write(diff)

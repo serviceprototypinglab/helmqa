@@ -5,27 +5,28 @@ import os
 import sys
 
 if len(sys.argv) != 2:
-	print("Syntax: {} <descriptordirectory>".format(sys.argv[0]), file=sys.stderr)
-	sys.exit(1)
+    print(f"Syntax: {sys.argv[0]} <descriptordirectory>", file=sys.stderr)
+    sys.exit(1)
 
-f = open("chartsubs.yaml")
-chartsubs = yaml.load(f)
-f.close()
+with open("chartsubs.yaml") as f:
+    chartsubs = yaml.load(f)
 
-descriptors = glob.glob("{}/*.yaml".format(sys.argv[1]))
+descriptors = glob.glob(f"{sys.argv[1]}/*.yaml")
+
 for descriptor in descriptors:
-	print("*", descriptor)
+    print("*", descriptor)
 
-	namecomps = os.path.basename(descriptor).split("-")
-	chartbase = ""
-	for namecomp in namecomps:
-		if namecomp[0].isdigit():
-			break
-		if chartbase:
-			chartbase += "-"
-		chartbase += namecomp
+    namecomps = os.path.basename(descriptor).split("-")
+    chartbase = ""
+    for namecomp in namecomps:
+        if namecomp[0].isdigit():
+            break
+        if chartbase:
+            chartbase += "-"
+        chartbase += namecomp
 
-	if chartbase in chartsubs:
-		for k, v in chartsubs[chartbase].items():
-			print("CHARTBASE", chartbase, k, v)
-			p = subprocess.run("sed -i -e 's/{}: \(.*\)/{}: {}/g' {}".format(k, k, v.replace("\"", "\\\""), descriptor), shell=True)
+    if chartbase in chartsubs:
+        for k, v in chartsubs[chartbase].items():
+            print("CHARTBASE", chartbase, k, v)
+            replacer = v.replace("\"", "\\\"")
+            p = subprocess.run(f"sed -i -e 's/{k}: \(.*\)/{k}: {replacer}/g' {descriptor}", shell=True)

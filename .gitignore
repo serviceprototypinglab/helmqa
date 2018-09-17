@@ -1,18 +1,17 @@
 _*
+.*
+__pycache__/*
+venv/*
+logs
+research
 
-# ... TODO register remote git
-research/longtermtracking
-
-# helmqa git
 *.json
-*.csv
+*.pdf
 *.dot
 *.png
 *.pdf
-
 *.log
 *.txt
 *.yaml
 *.png
-
-logs
+*.csv
