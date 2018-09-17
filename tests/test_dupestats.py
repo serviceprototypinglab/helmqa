@@ -1,6 +1,6 @@
 import unittest
 
-from dupestats import DupeStats
+from helmqa.dupestats import DupeStats
 
 
 class DupeStatsTest(unittest.TestCase):

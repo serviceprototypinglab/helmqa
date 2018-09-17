@@ -1,5 +1,5 @@
 import unittest
-from bucket import Bucket
+from helmqa.bucket import Bucket
 import xml.dom.minidom as xml_dom
 import os
 

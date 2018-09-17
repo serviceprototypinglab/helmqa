@@ -1,5 +1,5 @@
 import unittest
-from authorset import AuthorSet
+from helmqa.authorset import AuthorSet
 
 
 class AuthorSetTest(unittest.TestCase):

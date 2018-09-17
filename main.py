@@ -1,7 +1,7 @@
-from bucket import Bucket
-from dupestats import DupeStats
-from authorset import AuthorSet
-from rewriter import rewritechart
+from helmqa.bucket import Bucket
+from helmqa.dupestats import DupeStats
+from helmqa.authorset import AuthorSet
+from helmqa.rewriter import rewritechart
 
 bucket = Bucket()
 bucket.download()
