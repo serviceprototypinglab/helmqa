@@ -254,7 +254,9 @@ class AuthorSet:
 		import seaborn as sns
 		import numpy as np
 
-		a = np.zeros([self.maxmaint + 1, self.maxrefs + 1])
+		# FIXME: extra boundary due to spurious exception
+		# IndexError: index 21 is out of bounds for axis 1 with size 15
+		a = np.zeros([self.maxmaint + 1, self.maxrefs + 1 + 7])
 
 		for maint in self.sets:
 			numcharts = len(self.sets[maint])
