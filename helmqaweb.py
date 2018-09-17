@@ -236,7 +236,7 @@ def api_livecheck():
 
     response = dict()
 
-    if "exists" in process:#.decode('UTF-8'):
+    if "exists" in process:
         if "Already" in pull(repo_name):
 
             with open(f"dupestats_{repo_name}.json") as f:
@@ -246,7 +246,7 @@ def api_livecheck():
                 mults = json.load(f)
 
                 list_mults = list()
-                list_mults.append(mults) if mults else 1
+                list_mults.append(mults) if mults else None
 
             if not list_mults and not dupes:
                 response["status"] = "success"
@@ -254,13 +254,12 @@ def api_livecheck():
             else:
                 response["status"] = "fail"
                 response["code"] = 404
-
-            response["duplicates"] = dupes
-            response["multiplicates"] = list_mults
+                response["duplicates"] = dupes
+                response["multiplicates"] = list_mults
 
             return jsonify(response)
 
-    elif "fatal" in process:#.decode('UTF-8'):
+    elif "fatal" in process:
         response["message"] = f"{domainpath} doesn't exist"
         response["code"] = 404
 
@@ -282,28 +281,22 @@ def api_livecheck():
     else:
         response["status"] = "fail"
         response["code"] = 404
+        response["duplicates"] = dupes
+        response["multiplicates"] = list_mults
 
-    response["duplicates"] = dupes
-    response["multiplicates"] = list_mults
     return jsonify(response)
 
 
 def pull(repo_name):
-    process = subprocess.Popen(['git', f'--git-dir={repo_name}/.git', 'pull'], stdout=subprocess.PIPE).communicate()[0].decode('UTF-8')
+    process = subprocess.Popen(['git', f'--git-dir={repo_name}/.git', 'pull'], stdout=subprocess.PIPE)
+    process = process.communicate()[0].decode('UTF-8')
     return process
 
 
 def clone(domain_path, repo_name):
-    process = subprocess.Popen(['git', 'clone', domain_path, repo_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[1].decode('UTF-8')
+    process = subprocess.Popen(['git', 'clone', domain_path, repo_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = process.communicate()[1].decode('UTF-8')
     return process
-
-
-def package_charts_from_repo(repo_name):
-    process = os.listdir(repo_name)
-
-    for directory in process:
-        if os.path.isdir(f'{repo_name}/{directory}'):
-            subprocess.call(['helm', 'package', f'{repo_name}/{directory}', '-d', f'{repo_name}/'])
 
 
 def run_livecheck(repo_name):
