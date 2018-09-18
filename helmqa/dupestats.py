@@ -191,6 +191,7 @@ class DupeStats:
             self.avg_max = None
 
         print(len(self.stats_values), "charts analysed")
+        print(len(self.duplicates), "with duplicates")
 
         print("Total duplicated values", sum(self.stats_values))
 
