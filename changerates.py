@@ -4,6 +4,7 @@ import sys
 import datetime
 import operator
 import pandas as pd
+import glob
 
 
 class Changerates:
@@ -150,7 +151,7 @@ class Changerates:
             for sortedname in sortednames:
                 print(f"{sortedname:50s} {touchedcharts[sortedname]:3.2f}", file=f)
 
-            basenumber = 177
+            basenumber = len(glob.glob(f"{trackingdir}/charts/*.tgz"))
             regcharts = [touchedcharts[x] for x in touchedcharts if touchedcharts[x] > 0.5]
             irregcharts = [touchedcharts[x] for x in touchedcharts if touchedcharts[x] <= 0.5]
 
