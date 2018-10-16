@@ -5,7 +5,7 @@ FROM python:slim
 
 RUN \
 	apt-get update && \
-	apt-get --assume-yes install --no-install-recommends wget ca-certificates diffstat
+	apt-get --assume-yes install --no-install-recommends wget ca-certificates diffstat python-tk graphviz
 
 RUN \
 	wget --no-check-certificate https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
