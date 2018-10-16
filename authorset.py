@@ -199,6 +199,9 @@ class AuthorSet:
 
         print("Plotting heatmap...")
 
+        import matplotlib
+        matplotlib.use('Agg')
+        
         import matplotlib.pyplot as plt
         import seaborn as sns
         import numpy as np
