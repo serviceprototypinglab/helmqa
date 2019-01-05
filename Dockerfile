@@ -5,7 +5,7 @@ FROM python:slim
 
 RUN \
 	apt-get update && \
-	apt-get --assume-yes install --no-install-recommends wget ca-certificates diffstat python-tk graphviz
+	apt-get --assume-yes install --no-install-recommends git wget ca-certificates diffstat python-tk graphviz
 
 RUN \
 	wget --no-check-certificate https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && \
@@ -30,6 +30,7 @@ RUN \
 
 EXPOSE 5000
 
-#CMD ["/bin/sleep", "9999999"]
 WORKDIR /home/helmqa
-CMD ["/bin/sh", "/home/helmqa/helmqa.sh"]
+
+# Starts HelmQA in client mode. To start HelmQA in research mode, add -r
+CMD ["/bin/bash", "helmqa.sh"]
