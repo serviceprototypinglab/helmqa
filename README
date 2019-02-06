@@ -1,6 +1,26 @@
 HelmQA - Quality and consistency checks of Helm charts
 (originally: "similaritymetrics" to compare Helm charts semantically)
 
+--------------------------------------------------------------------------------------------------------------------
+Installation:
+
+Clone the repository:
+git clone https://github.com/serviceprototypinglab/helmqa && cd helmqa
+
+Run the following to create and activate a virtual environment and install all the dependencies:
+virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
+
+And to start the server:
+chmod +x helmqa.sh && ./helmqa.sh
+
+From Docker container:
+
+Build:
+docker build -t helmqa .
+
+Run:
+docker run -ti -p 5000:5000 helmqa
+--------------------------------------------------------------------------------------------------------------------
 This directory is a collection of Helm chart analysis scripts and reference
 data produced by the scripts on KubeApps Hub in May 2018. The following list
 describes which files are used how.

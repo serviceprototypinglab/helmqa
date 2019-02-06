@@ -253,7 +253,7 @@ def api_livecheck():
                 response["code"] = 200
             else:
                 response["status"] = "fail"
-                response["code"] = 404
+                response["code"] = 200
                 response["duplicates"] = dupes
                 response["multiplicates"] = list_mults
 
@@ -261,7 +261,7 @@ def api_livecheck():
 
     elif "fatal" in process:
         response["message"] = f"{domainpath} doesn't exist"
-        response["code"] = 404
+        response["code"] = 200
 
         return jsonify(response)
 
@@ -280,7 +280,7 @@ def api_livecheck():
         response["code"] = 200
     else:
         response["status"] = "fail"
-        response["code"] = 404
+        response["code"] = 200
         response["duplicates"] = dupes
         response["multiplicates"] = list_mults
 
