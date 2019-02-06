@@ -1,5 +1,7 @@
+# prep  »» git status --ignored --porcelain
 # build »» docker build -t helmqa .
-# run   »» docker run -ti -p 5000:5000 -u 12345 helmqa /bin/sh
+# run   »» docker run -ti -p 5000:5000 -u 12345 helmqa [-s|-r]
+# export»» clone to clean directory first, then: docker tag & push ...
 
 FROM python:slim
 
@@ -32,5 +34,6 @@ EXPOSE 5000
 
 WORKDIR /home/helmqa
 
-# Starts HelmQA in client mode. To start HelmQA in research mode, add -r
-CMD ["/bin/bash", "helmqa.sh"]
+# Starts HelmQA in client mode. To start HelmQA in research mode, add -r. For shell access, add -s.
+ENTRYPOINT ["/bin/bash", "helmqa.sh"]
+CMD []

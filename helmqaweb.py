@@ -12,6 +12,14 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 class HelmQA:
     def __init__(self):
+        try:
+            self.initfiles()
+        except:
+            self.configured = False
+        else:
+            self.configured = True
+
+    def initfiles(self):
         with open("authorsets_charts.json") as f:
             self.charts = json.load(f)
 
@@ -55,7 +63,10 @@ class HelmQA:
 
     def frontpage(self):
         header = "HelmQA by Service Prototyping Lab, Zurich University of Applied Sciences"
-        return header + "<br>" + self.chartlist() + "<br><br>" + self.maintainerlist()
+        if self.configured:
+            return header + "<br>" + self.chartlist() + "<br><br>" + self.maintainerlist()
+        else:
+            return "This instance is not configured to show analysis results. Presumably you want to use /livecheck programmatically, or run with -r for research mode?"
 
     def showchart(self, chart):
         s = ""

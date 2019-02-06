@@ -1,8 +1,14 @@
-if [[ "$1" == "-r" ]]; then
+if [ "$1" == "-r" ]; then
+	echo " * HelmQA research (analysis) mode"
 	python3 main.py
+elif [ "$1" == "-s" ]; then
+	echo " * Shell (debug) mode"
+	/bin/sh
+else
+	echo " * HelmQA client (CI/CD) mode"
 fi
 
-mkdir logs
+mkdir -p logs
 
 unameOut="$(uname -s)"
 
