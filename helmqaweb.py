@@ -259,7 +259,8 @@ def api_livecheck():
                 list_mults = list()
                 list_mults.append(mults) if mults else None
 
-            if not list_mults and not dupes:
+            #if not list_mults and not dupes:
+            if not list_mults:
                 response["status"] = "success"
                 response["code"] = 200
             else:
@@ -286,7 +287,8 @@ def api_livecheck():
         list_mults = list()
         list_mults.append(mults) if mults else 1
 
-    if not list_mults and not dupes:
+    #if not list_mults and not dupes:
+    if not list_mults:
         response["status"] = "success"
         response["code"] = 200
     else:
