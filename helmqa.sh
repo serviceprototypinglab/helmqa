@@ -1,6 +1,6 @@
 if [ "$1" == "-r" ]; then
 	echo " * HelmQA research (analysis) mode"
-	python3 main.py
+	python3 main.py &
 elif [ "$1" == "-s" ]; then
 	echo " * Shell (debug) mode"
 	/bin/sh
