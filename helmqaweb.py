@@ -66,7 +66,7 @@ class HelmQA:
         if self.configured:
             return header + "<br>" + self.chartlist() + "<br><br>" + self.maintainerlist()
         else:
-            return "This instance is not configured to show analysis results. Presumably you want to use /livecheck programmatically, or run with -r for research mode?"
+            return "This instance is not configured to show analysis results. Presumably you want to use /livecheck programmatically, or run with -r for research mode? (Or perhaps it runs in research mode and still waits for the results - please be patient in this case and reload in some minutes.)"
 
     def showchart(self, chart):
         s = ""
