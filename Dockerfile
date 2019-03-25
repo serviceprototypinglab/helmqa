@@ -22,7 +22,6 @@ RUN \
 	chown -R helmqa /home/helmqa
 
 RUN \
-	mkdir /home/helmqa/logs && \
 	chmod 777 /home/helmqa/logs && \
 	chmod 777 /home/helmqa
 
