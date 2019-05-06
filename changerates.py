@@ -151,7 +151,7 @@ class Changerates:
             for sortedname in sortednames:
                 print(f"{sortedname:50s} {touchedcharts[sortedname]:3.2f}", file=f)
 
-            basenumber = len(glob.glob(f"{trackingdir}/charts/*.tgz"))
+            basenumber = len(glob.glob(f"{self.trackingdir}/charts/*.tgz"))
             regcharts = [touchedcharts[x] for x in touchedcharts if touchedcharts[x] > 0.5]
             irregcharts = [touchedcharts[x] for x in touchedcharts if touchedcharts[x] <= 0.5]
 
@@ -176,13 +176,13 @@ class Changerates:
 
         df["total"] = df["new"].rolling(min_periods=1, window=1000).sum() - df["removed"].rolling(min_periods=1,
                                                                                                   window=1000).sum()
-        df["total"] = df["total"].astype(int) + startcount
+        df["total"] = df["total"].astype(int) + int(startcount)
 
         print(df["total"])
 
         df["total"].to_csv("changerates-total.csv")
 
-    def metrics_filtered(df, column, mode=None):
+    def metrics_filtered(self, df, column, mode=None):
         if mode is None:
             dfc = df[column]
         elif mode == "weekday":
@@ -234,7 +234,7 @@ class Changerates:
         os.chdir(origdir)
         return log
 
-    def unique_parse(log):
+    def unique_parse(self, log):
         date = None
         comment = None
         dateline = -5
@@ -270,7 +270,7 @@ class Changerates:
 
         return changes
 
-    def unique_interpolate(changes, changeslist):
+    def unique_interpolate(self, changes, changeslist):
         for date in changeslist[:-1]:
             d = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
@@ -293,7 +293,7 @@ class Changerates:
             modcount = 0
             for date in changeslist:
                 modcount += changes[date]
-                f.write(f"{date},{modcount + startcount}\n")
+                f.write(f"{date},{modcount + int(startcount)}\n")
 
 
 if __name__ == "__main__":
