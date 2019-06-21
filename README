@@ -18,8 +18,12 @@ From Docker container:
 Build:
 docker build -t helmqa .
 
-Run:
+Run in client (CI/CD) mode with web service interface (see API description below):
 docker run -ti -p 5000:5000 helmqa
+
+Run in debug and research modes: Add -s (shell), -r (research)
+
+Run in local Helm chart check mode: add -v $PWD:/charts
 --------------------------------------------------------------------------------------------------------------------
 This directory is a collection of Helm chart analysis scripts and reference
 data produced by the scripts on KubeApps Hub in May 2018. The following list

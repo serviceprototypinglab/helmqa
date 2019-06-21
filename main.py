@@ -2,15 +2,26 @@ from bucket import Bucket
 from dupestats import DupeStats
 from authorset import AuthorSet
 from rewriter import rewritechart
+import os
 
-bucket = Bucket()
+if os.path.isdir("/charts"):
+       os.chdir("/charts")
+       bucket = Bucket(path="/charts")
+else:
+       bucket = Bucket()
 bucket.download()
 bucket.extract()
 
-stat = DupeStats()
+if os.path.isdir("/charts"):
+    stat = DupeStats(path="/charts")
+else:
+    stat = DupeStats()
 stat.dupe_stats()
 
-authorSet = AuthorSet()
+if os.path.isdir("/charts"):
+    authorSet = AuthorSet(chartdir="/charts")
+else:
+    authorSet = AuthorSet()
 authorSet.preprocess()
 authorSet.process()
 authorSet.processproposals()

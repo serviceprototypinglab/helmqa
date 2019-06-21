@@ -4,8 +4,16 @@ if [ "$1" == "-r" ]; then
 elif [ "$1" == "-s" ]; then
 	echo " * Shell (debug) mode"
 	/bin/sh
+	exit
 else
-	echo " * HelmQA client (CI/CD) mode"
+	if [ -d /charts ]
+	then
+		echo " * HelmQA client (local charts) mode"
+		python3 main.py
+		exit
+	else
+		echo " * HelmQA client (CI/CD) mode"
+	fi
 fi
 
 mkdir -p logs

@@ -13,9 +13,13 @@ def rewritechart(chartfile, dupeslist):
         print(os_err)
         exit(1)
 
-    tar = tarfile.open(chartfile)
-    tar.extractall("_rewriter/orig")
-    tar.extractall("_rewriter/deduped")
+    if chartfile.endswith(".tgz"):
+        tar = tarfile.open(chartfile)
+        tar.extractall("_rewriter/orig")
+        tar.extractall("_rewriter/deduped")
+    else:
+        subprocess.call(["cp", "-r", chartfile, "_rewriter/orig"])
+        subprocess.call(["cp", "-r", chartfile, "_rewriter/deduped"])
 
     for (varcounter, dictionary) in enumerate(dupeslist):
         dictionary['value'] = dictionary['value'].replace("\\", "\\\\")
@@ -31,7 +35,7 @@ def rewritechart(chartfile, dupeslist):
     p = subprocess.run("diff -Nur _rewriter/orig/ _rewriter/deduped/", shell=True, stdout=subprocess.PIPE)
     diff = p.stdout
 
-    difffile = os.path.join("_diffs", os.path.basename(chartfile).replace(".tgz", "-deduplicated.diff"))
+    difffile = os.path.join("_diffs", os.path.basename(chartfile).replace(".tgz", "") + "-deduplicated.diff")
 
     with open(difffile, "wb") as f:
         f.write(diff)
